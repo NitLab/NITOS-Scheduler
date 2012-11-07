@@ -1,0 +1,54 @@
+INSTALLATION INSTRUCTIONS FOR NITOS SCHEDULER
+
+NITOS scheduler has the following workflow.
+
+1. At 28 and 58 minute the file reservations_check.rb located in /sbin is executed. (as cron job through /etc/crontab file)
+
+2. This script checks the scheduler database for ending reservations and deactivates them. After that checks for starting reservations 
+   and activates them (The activation/deactivation is actually an omf_create_psnode command for OMF).
+
+3. Scheduler runs periodically the frequencies_check.rb script to check for frequency misuse. A parser could be used at the log file 
+   that the script makes in order to enforce the usage policy you have.
+
+HOW TO INSTALL NITOS SCHEDULER
+
+1. Import the scheduler's database tables in your mysql (scheduler_db.sql). Note that:
+	- jos_users is the table for users.
+	- node_list is the table for nodes.
+	- spectrum is the table for frequencies.
+	- slices is the table for slices.
+	- reservations is the table for reservation of nodes.
+	- spec_reserve is the table for reservation of frequencies.
+	- users_slices is the table for the association between users and slices.
+
+2. Fill the tables with the correct info (the columns type,floor,view,wall,x,z in node_list are not used. y should be the number of the node 
+   e.x. 4 for node004). (username in reservation and spec_reserve is actually the slice_name.)
+
+
+   e.x.		id 	name 	type 	floor 	view 	wall 	x 	y 	z
+		8 	node001 orbit 	4 	outside front 	1 	1 	4
+
+	 	id 	modulation 	channel frequency
+		1 	IEEE802_11a 	36 	5180
+
+3. Copy the files located to the package's sbin folder at your /sbin folder.
+
+4. Insert the MySql username and password to the reservations_check.rb script in line 44.
+
+5. Copy the files located to the package's bin folder at your /bin folder. chmod them with 755 in order to get executables.
+
+6. Make a new "scheduler" user. 
+	$ useradd -m -d /home/scheduler -s /bin/bash scheduler
+
+7. $ sudo -u scheduler ssh-keygen -t rsa 
+
+8. Copy frequencies_check.rb to scheduler's home folder. Open it and insert username and password for MySql database.
+
+9. Run create_slice script for all your users. (Remember to comment useradd command in case they have already a command line account in your server)
+
+10. Copy crontab file to /etc/ and restart crontab.
+
+11. Copy the files located to the /root folder at your /root folder.
+
+11. Every user should copy server's root public key to the authorized_keys file in the node's image file system. (This is required in order to get the frequencies)
+
