@@ -29,7 +29,7 @@ Regarding the omf procedures of load/save and tell, we have also modified OMF in
 The TCRS service (Testbed's central reboot system) is running at NITOS testbed and manages the power control of the nodes.
 Users/slices can only hard-reboot nodes they have reserved for the current time slot via TCRS.
 We also follow this policy with the CM cards whose management is provided through the OMF CMC service.
-
+___________________________
 Apart from isolation of user access to the nodes, frequency slicing is also fundamental to achieving
 experiment isolation in a wireless environment.
 Regarding frequency slicing, we have developed a solution that works even in the case where a user does not use OMF to run his experiments.
@@ -46,7 +46,7 @@ are logged in a file that a parser is checking. Then the desired policy can be a
 users (user warning through mail, frequency switching, node rebooting etc.)
 A set of sniffer nodes, collectively spanning the testbed range, will also be added in the near future,
 in order to check for misbehavior.
-
+___________________________
 Summarizing, from a NITOS user's perspective the steps that he/she has to follow the first time are:
 reserve nodes for his/her slice using the web application
 -login to the NITOS server
