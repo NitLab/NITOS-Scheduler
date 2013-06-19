@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.10deb1
+-- version 3.4.11.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 06, 2012 at 08:29 PM
--- Server version: 5.1.54
--- PHP Version: 5.3.5-1ubuntu7.10
+-- Generation Time: Jun 19, 2013 at 04:57 PM
+-- Server version: 5.5.29
+-- PHP Version: 5.4.6-1ubuntu1.2
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -16,16 +17,16 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `j_install`
+-- Database: `nitlab`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jos_users`
+-- Table structure for table `b9tj1_users`
 --
 
-CREATE TABLE IF NOT EXISTS `jos_users` (
+CREATE TABLE IF NOT EXISTS `b9tj1_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `username` varchar(150) NOT NULL DEFAULT '',
@@ -39,14 +40,16 @@ CREATE TABLE IF NOT EXISTS `jos_users` (
   `lastvisitDate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `activation` varchar(100) NOT NULL DEFAULT '',
   `params` text NOT NULL,
-  `slice_id` int(11) DEFAULT NULL,
+  `lastResetTime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Date of last password reset',
+  `resetCount` int(11) NOT NULL DEFAULT '0' COMMENT 'Count of password resets since lastResetTime',
+  `slice_id` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `usertype` (`usertype`),
   KEY `idx_name` (`name`),
-  KEY `gid_block` (`gid`,`block`),
+  KEY `idx_block` (`block`),
   KEY `username` (`username`),
   KEY `email` (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1356 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1509 ;
 
 -- --------------------------------------------------------
 
@@ -66,7 +69,40 @@ CREATE TABLE IF NOT EXISTS `node_list` (
   `z` int(11) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=134 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=136 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `node_specs`
+--
+
+CREATE TABLE IF NOT EXISTS `node_specs` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `functional` int(11) DEFAULT NULL,
+  `cmc_attached` int(11) DEFAULT NULL,
+  `cmc_status` int(11) DEFAULT NULL,
+  `cmc_version` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `image_load` int(11) DEFAULT NULL,
+  `ping` int(11) DEFAULT NULL,
+  `CPU` varchar(100) DEFAULT NULL,
+  `cores` int(11) DEFAULT NULL,
+  `threads` int(11) DEFAULT NULL,
+  `L1_KB` float DEFAULT NULL,
+  `L2_MB` float DEFAULT NULL,
+  `RAM_GB` float DEFAULT NULL,
+  `RAM_type` varchar(17) DEFAULT NULL,
+  `GPU` varchar(100) DEFAULT NULL,
+  `Network` varchar(100) DEFAULT NULL,
+  `Disk_GB` float DEFAULT NULL,
+  `MIMO` varchar(100) DEFAULT NULL,
+  `MAC_ath_pci` varchar(20) DEFAULT NULL,
+  `MAC_wlan0` varchar(20) DEFAULT NULL,
+  `MAC_eth0` varchar(20) DEFAULT NULL,
+  `MAC_eth1` varchar(20) DEFAULT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -83,7 +119,21 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   PRIMARY KEY (`id`),
   KEY `username` (`username`),
   KEY `node_id` (`node_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19866 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=27261 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rsa_keys`
+--
+
+CREATE TABLE IF NOT EXISTS `rsa_keys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `slice_id` int(11) NOT NULL,
+  `key` varchar(1000) CHARACTER SET utf8 DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1435 ;
 
 -- --------------------------------------------------------
 
@@ -95,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `slices` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `slice_name` varchar(30) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=123 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=260 ;
 
 -- --------------------------------------------------------
 
@@ -109,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `spectrum` (
   `channel` int(11) DEFAULT NULL,
   `frequency` float DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
 
 -- --------------------------------------------------------
 
@@ -124,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `spec_reserve` (
   `end_time` datetime NOT NULL,
   `spectrum_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5177 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7387 ;
 
 -- --------------------------------------------------------
 
@@ -137,4 +187,8 @@ CREATE TABLE IF NOT EXISTS `users_slices` (
   `user_id` int(11) NOT NULL,
   `slice_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=150 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=179 ;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
