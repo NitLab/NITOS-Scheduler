@@ -39,5 +39,5 @@ touch /home/$1/.ssh/authorized_keys
 
 #Create OMF slice
 /usr/sbin/omf_create_psnode-5.4 $2 mkslice $1
-/usr/bin/ruby /root/add_to_AM_config.rb $1
+ruby /root/add_to_AM_config.rb $1
 /etc/init.d/omf-aggmgr-5.4 restart

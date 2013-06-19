@@ -1,4 +1,3 @@
-#!/usr/bin/ruby
 #
 # Copyright (c) 2009-2012 NITLab, University of Thessaly, CERTH, Greece
 #
@@ -28,15 +27,35 @@
 # Called by the scheduler script create_slice.
 #
 
+require "mysql"
+require "rubygems"
+require "dbi"
+
+$db = ""
+$user = ""
+$pass = ""
+new_id = 0
+
 ARGV.each do |slice_name|
+	# Add slice to AM of OMF
 	@original_string = "\"default_slice\""
 	@replacement_string = "\"default_slice\", \"#{slice_name}\""
 
 	file_name =  "/etc/omf-aggmgr-5.4/omf-aggmgr.yaml"
 
   	text = File.read(file_name)
- 
   	replace = text.gsub!(@original_string, @replacement_string)
- 
   	File.open(file_name, "w") { |file| file.puts replace }
+
+	# Add slice to NITOS Scheduler database
+	#puts "Connecting to database..."
+	dbh = DBI.connect("DBI:Mysql:#{$db}:localhost","#{$user}", "#{$pass}")
+
+	dbh.do("INSERT INTO slices (slice_name) VALUES ('#{slice_name}')")
+	id = dbh.prepare("SELECT id FROM slices WHERE slice_name = '#{slice_name}'")
+	id.execute()
+	id.fetch do |n|
+		new_id = n[0].to_s
+	end
+	puts new_id.rjust(3, '0')
 end
