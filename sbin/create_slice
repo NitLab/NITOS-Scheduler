@@ -30,14 +30,19 @@
 
 /usr/sbin/useradd -m -d /home/$1 -s /bin/bash $1
 
-#add user to the users group so sudo commands  work
+# Add user to the users group so sudo commands  work
 /usr/sbin/usermod -G users $1
-#create user with empty pass
+# Create user with empty pass
 mkdir /home/$1/.ssh
 /bin/chown -R $1 /home/$1/.ssh
 touch /home/$1/.ssh/authorized_keys
 
-#Create OMF slice
+# Create OMF slice
 /usr/sbin/omf_create_psnode-5.4 $2 mkslice $1
-ruby /root/add_to_AM_config.rb $1
+
+# Insert slice in Scheduler's database and return the id
+id=`ruby /root/add_to_AM_config.rb $1`
 /etc/init.d/omf-aggmgr-5.4 restart
+
+# Create Flowvisor slice
+sshpass -p 'password' ssh -o StrictHostKeyChecking=no flowvisor@flowvisor "echo '1234' | /usr/bin/fvctl-xml --passwd-file=/home/flowvisor/.fvp createSlice $1 tcp:127.0.0.1:9$id $1@mail.com"
