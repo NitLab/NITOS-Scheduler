@@ -8,7 +8,7 @@ NITOS scheduler has the following workflow.
    and activates them (The activation/deactivation is actually an omf_create_psnode command for OMF).
 
 3. Scheduler runs periodically the frequencies_check.rb script to check for frequency misuse. A parser could be used at the log file 
-   that the script makes in order to enforce the usage policy you have.
+   that the script makes, in order to enforce the usage policy you have.
 
 HOW TO INSTALL NITOS SCHEDULER
 
@@ -39,8 +39,7 @@ HOW TO INSTALL NITOS SCHEDULER
 
 6. Make a new "scheduler" user. 
 	$ useradd -m -d /home/scheduler -s /bin/bash scheduler
-
-7. $ sudo -u scheduler ssh-keygen -t rsa 
+	$ sudo -u scheduler ssh-keygen -t rsa 
 
 8. Copy frequencies_check.rb to scheduler's home folder. Open it and insert username and password for MySql database.
 
@@ -50,5 +49,5 @@ HOW TO INSTALL NITOS SCHEDULER
 
 11. Copy the files located to the /root folder at your /root folder.
 
-11. Every user should copy server's root public key to the authorized_keys file in the node's image file system. (This is required in order to get the frequencies)
+11. Every user should copy server's root public key to the authorized_keys file in the node's image file system. (This is required in order to check the frequencies)
 

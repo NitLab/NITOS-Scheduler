@@ -27,7 +27,6 @@
 # Called by the scheduler script create_slice.
 #
 
-require "mysql"
 require "rubygems"
 require "dbi"
 

@@ -34,8 +34,20 @@ map=(00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 
 
 /usr/sbin/omf_create_psnode-5.4 $3 sliceadd $1 omf.nitos.node0${map[$2]}
 
+#-------------------- OpenFlow Slicing --------------------#
+# The configuration below works for 1 OpenFlow switch.     #
+# In case of more OpenFlow switches, like in NITOS, please #
+# contact NITOS administrators for further advice on       #
+# the configuration of the OpenFlow slicing...             #
+
+#--------------------- Add FlowSpace ----------------------#
+fvctl___port=(0  2  4  6  8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48  2  4  6  8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44)
+
+sshpass -p 'fv_password' ssh -o StrictHostKeyChecking=no flowvisor@flowvisor "/usr/bin/fvctl-xml --passwd-file=/home/flowvisor/.fvp addFlowSpace ${'datapath_id'} 10 in_port=${fvctl___port[$2]} Slice:$1=4"
+
 #------------- Give access to Control Network -----------------
 #iptables -A OUTPUT -p all -d 10.0.0.$2 -m owner --uid-owner $1 -j ACCEPT
 iptables -D OUTPUT -o eth1 -j REJECT
 iptables -A OUTPUT -d 10.0.1.$2 -m owner --uid-owner $1 -j ACCEPT
 iptables -A OUTPUT -o eth1 -j REJECT
+iptables-save > /etc/iptables/rules.v4

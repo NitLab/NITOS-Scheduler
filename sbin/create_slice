@@ -45,4 +45,4 @@ id=`ruby /root/add_to_AM_config.rb $1`
 /etc/init.d/omf-aggmgr-5.4 restart
 
 # Create Flowvisor slice
-sshpass -p 'password' ssh -o StrictHostKeyChecking=no flowvisor@flowvisor "echo '1234' | /usr/bin/fvctl-xml --passwd-file=/home/flowvisor/.fvp createSlice $1 tcp:127.0.0.1:9$id $1@mail.com"
+sshpass -p 'fv_password' ssh -o StrictHostKeyChecking=no flowvisor@flowvisor "echo 'slice_password' | /usr/bin/fvctl-xml --passwd-file=/home/flowvisor/.fvp createSlice $1 tcp:127.0.0.1:9$id $1@mail.com"

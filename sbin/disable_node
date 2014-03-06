@@ -37,9 +37,20 @@ map=(00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 
 # for OMF 5.4
 /usr/sbin/omf_create_psnode-5.4 $3 rmnode /OMF_5.4/$1/resources/omf.nitos.node0${map[$2]}
 
+#-------------------- OpenFlow Slicing --------------------#
+# The configuration below works for 1 OpenFlow switch.     #
+# In case of more OpenFlow switches, like in NITOS, please #
+# contact NITOS administrators for further advice on       #
+# the configuration of the OpenFlow slicing...             #
+
+#------------------- Remove FlowSpace ---------------------#
+fvctl___port=(0  2  4  6  8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48  2  4  6  8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44)
+
+FLOW_SPACE_IDS=$(sshpass -p 'fv_password' ssh -o StrictHostKeyChecking=no flowvisor@flowvisor "/usr/bin/fvctl-xml --passwd-file=/home/flowvisor/.fvp listFlowSpace | grep 'dpid=\[00:00:00:00:00:00:00:0${datapath_id}\]' |     grep 'in_port=${fvctl___port[$2]}' | grep 'Slice:$1' | cut -d, -f4 | cut -d[ -f2 | cut -d] -f1")
+
 #------------------- Switch Off the Node-------------
 #curl http://10.1.0.$2/off
 
 #------------------- Remove access to Control Network -----------------
 iptables -D OUTPUT -d 10.0.1.$2 -m owner --uid-owner $1 -j ACCEPT
-
+iptables-save > /etc/iptables/rules.v4

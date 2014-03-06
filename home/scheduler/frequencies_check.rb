@@ -30,10 +30,10 @@
 # folder at each active node's filesystem.
 #
 
-require 'mysql'
 require 'rubygems'
 require 'net/ssh'
 require 'logger'
+require "dbi"
 
 log = Logger.new('log', shift_age = 'weekly')
 #get current time
