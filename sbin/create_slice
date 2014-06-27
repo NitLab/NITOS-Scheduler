@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# Syntax: create_slice [slice_name] [xmpp_server]
+# Syntax: create_slice [slice_name]
 #
 # == Description
 #
@@ -32,17 +32,24 @@
 
 # Add user to the users group so sudo commands  work
 /usr/sbin/usermod -G users $1
+
+# nitlab2.inf.uth.gr
+sshpass -p 'password' ssh -o StrictHostKeyChecking=no root@nitlab2.inf.uth.gr "/usr/sbin/useradd -s /bin/bash $1"
+sshpass -p 'password' ssh -o StrictHostKeyChecking=no root@nitlab2.inf.uth.gr "/usr/sbin/usermod -G users $1"
+
 # Create user with empty pass
 mkdir /home/$1/.ssh
 /bin/chown -R $1 /home/$1/.ssh
 touch /home/$1/.ssh/authorized_keys
 
-# Create OMF slice
-/usr/sbin/omf_create_psnode-5.4 $2 mkslice $1
-
 # Insert slice in Scheduler's database and return the id
+# nitlab.inf.uth.gr
 id=`ruby /root/add_to_AM_config.rb $1`
-/etc/init.d/omf-aggmgr-5.4 restart
+service omf-aggmgr-5.4 restart
+
+# nitlab2.inf.uth.gr
+sshpass -p 'password' ssh -o StrictHostKeyChecking=no root@nitlab2.inf.uth.gr "ruby /root/add_to_AM_config.rb $1"
+sshpass -p 'password' ssh -o StrictHostKeyChecking=no root@nitlab2.inf.uth.gr "service omf-aggmgr-5.4 restart"
 
 # Create Flowvisor slice
 sshpass -p 'fv_password' ssh -o StrictHostKeyChecking=no flowvisor@flowvisor "echo 'slice_password' | /usr/bin/fvctl-xml --passwd-file=/home/flowvisor/.fvp createSlice $1 tcp:127.0.0.1:9$id $1@mail.com"

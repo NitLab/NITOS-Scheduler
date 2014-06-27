@@ -28,14 +28,6 @@
 # Called automatically by the scheduler. Please do not call it manually.
 #
 
-#------------------- OMF Scheduler -----------------
-
-map=(00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50)
-
-# for OMF 5.3
-#/usr/sbin/omf_create_psnode-5.3 $3 rmnode /OMF/$1/resources/omf.nitos.node0${map[$2]}
-# for OMF 5.4
-/usr/sbin/omf_create_psnode-5.4 $3 rmnode /OMF_5.4/$1/resources/omf.nitos.node0${map[$2]}
 
 #-------------------- OpenFlow Slicing --------------------#
 # The configuration below works for 1 OpenFlow switch.     #
